@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stradi</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+body {
+    margin: 0;
+    overflow: hidden;
+    background: black;
+    font-family: Arial, sans-serif;
+}
+
+/* FLASH INICIAL */
+.flash {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: white;
+    z-index: 99;
+    animation: flashOut 0.4s forwards;
+}
+
+@keyframes flashOut {
+    to { opacity: 0; visibility: hidden; }
+}
+
+/* FONDO */
+.bg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: url('stradi enfadado.png') no-repeat center center/cover;
+    animation: zoom 8s ease-out forwards;
+}
+
+@keyframes zoom {
+    from { transform: scale(1.3); }
+    to { transform: scale(1); }
+}
+
+/* OVERLAY COLOR */
+.overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255,100,0,0.2), rgba(0,0,0,0.7));
+}
+
+/* CONTADOR */
+.counter {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    padding: 12px 25px;
+    border-radius: 20px;
+    color: #fff;
+    font-weight: bold;
+    background: rgba(0,0,0,0.7);
+    box-shadow: 0 0 15px rgba(255,100,0,0.8);
+    border: 1px solid rgba(255,100,0,0.5);
+}
+
+/* REDES */
+.socials {
+    position: absolute;
+    bottom: 50px;
+    width: 100%;
+    text-align: center;
+}
+
+.socials a {
+    margin: 0 25px;
+    font-size: 55px;
+    transition: 0.2s;
+    animation: shake 2s infinite;
+}
+
+/* VIBRACIÓN SUTIL */
+@keyframes shake {
+    0% { transform: translate(0,0); }
+    25% { transform: translate(1px,-1px); }
+    50% { transform: translate(-1px,1px); }
+    75% { transform: translate(1px,1px); }
+    100% { transform: translate(0,0); }
+}
+
+.socials a:hover {
+    transform: scale(1.5);
+    text-shadow: 0 0 25px currentColor;
+}
+
+/* COLORES */
+.fa-tiktok { color: #00f2ea; }
+.fa-youtube { color: red; }
+.fa-instagram { color: #ff0066; }
+.fa-x-twitter { color: #ccc; }
+
+canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="flash"></div>
+<div class="bg"></div>
+<div class="overlay"></div>
+<canvas id="particles"></canvas>
+
+<div class="counter">
+    👁️ <span id="visits">...</span>
+</div>
+
+<div class="socials">
+    <a href="https://www.tiktok.com/@stradi81" target="_blank"><i class="fab fa-tiktok"></i></a>
+    <a href="https://www.youtube.com/stradi" target="_blank"><i class="fab fa-youtube"></i></a>
+    <a href="https://www.instagram.com/stradi_81/" target="_blank"><i class="fab fa-instagram"></i></a>
+    <a href="https://x.com/Stradi81" target="_blank"><i class="fab fa-x-twitter"></i></a>
+</div>
+
+<script>
+// CONTADOR
+fetch("https://api.countapi.xyz/hit/stradi81/visitas")
+.then(res => res.json())
+.then(data => {
+    document.getElementById("visits").innerText = data.value;
+})
+.catch(() => {
+    document.getElementById("visits").innerText = "—";
+});
+
+// PARTÍCULAS MÁS INTENSAS
+const canvas = document.getElementById("particles");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+
+for(let i = 0; i < 100; i++){
+    particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: (Math.random() - 0.5) * 2,
+        vy: (Math.random() - 0.5) * 2
+    });
+}
+
+function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if(p.x < 0 || p.x > canvas.width) p.vx *= -1;
+        if(p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+        ctx.fillStyle = "rgba(255,150,0,0.7)";
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 2, 0, Math.PI*2);
+        ctx.fill();
+    });
+
+    requestAnimationFrame(draw);
+}
+
+draw();
+
+// SONIDO IMPACTO
+document.addEventListener("click", () => {
+    let audio = new Audio("https://www.soundjay.com/buttons/sounds/button-10.mp3");
+    audio.volume = 0.6;
+    audio.play();
+}, { once: true });
+
+</script>
+
+</body>
+</html>
