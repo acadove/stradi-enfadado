@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pulsa el botón</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@800&family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;overflow:hidden;background:#000;}
+
+/* ===== PAGE 1 - NEON ===== */
+#page1{width:100%;height:100vh;background:#080c10;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+#starCanvas{position:absolute;inset:0;z-index:0;}
+.neon-btn{position:relative;z-index:2;padding:48px 90px;border:2px solid #6dd5f8;border-radius:20px;cursor:pointer;background:rgba(8,20,38,0.55);box-shadow:0 0 14px #6dd5f8,0 0 35px #4ab8e8,0 0 70px rgba(74,184,232,0.3),inset 0 0 24px rgba(74,184,232,0.07);animation:pulse-neon 3s ease-in-out infinite;transition:transform .2s;text-align:center;}
+.neon-btn:hover{transform:scale(1.04);animation:none;box-shadow:0 0 28px #8ee8ff,0 0 65px #6dd5f8,0 0 110px rgba(74,184,232,0.6),inset 0 0 40px rgba(74,184,232,0.18);}
+.neon-btn:active{transform:scale(0.97);}
+.neon-text{font-family:'Barlow',sans-serif;font-weight:800;font-size:clamp(24px,4vw,38px);color:#fff;text-transform:uppercase;letter-spacing:0.04em;line-height:1.2;text-shadow:0 0 12px rgba(255,255,255,0.4);user-select:none;}
+.corner-gem{position:absolute;bottom:22px;right:24px;z-index:2;width:20px;height:20px;background:rgba(160,190,210,0.5);clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);}
+@keyframes pulse-neon{0%,100%{box-shadow:0 0 14px #6dd5f8,0 0 35px #4ab8e8,0 0 70px rgba(74,184,232,0.3),inset 0 0 24px rgba(74,184,232,0.07);}50%{box-shadow:0 0 22px #8ee8ff,0 0 55px #6dd5f8,0 0 100px rgba(74,184,232,0.5),inset 0 0 36px rgba(74,184,232,0.14);}}
+
+/* ===== PAGE 2 - VIRUS ===== */
+#page2{display:none;width:100%;height:100vh;background:#080000;font-family:'Share Tech Mono',monospace;color:#cc0000;flex-direction:column;overflow:hidden;position:relative;}
+#page2.active{display:flex;}
+#page2::before{content:'';position:absolute;inset:0;z-index:200;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.12) 2px,rgba(0,0,0,0.12) 4px);}
+.v-topbar{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 14px;border-bottom:1px solid #440000;flex-shrink:0;}
+.sys-hacked{font-family:'VT323',monospace;font-size:20px;color:#ff2200;text-shadow:0 0 8px #ff2200;}
+.sys-hacked .sub{color:#ff5500;font-size:14px;}
+.tleft-lines{font-size:11px;color:#992200;margin-top:4px;line-height:1.6;}
+.infectado{font-family:'VT323',monospace;font-size:46px;color:#ff1100;text-shadow:0 0 12px #ff0000,0 0 35px #ff0000;letter-spacing:5px;animation:glitch 2.5s infinite;text-align:center;}
+.skull-top{font-size:34px;text-align:center;filter:drop-shadow(0 0 8px #ff2200);animation:flicker 1.8s infinite;}
+.fw-box{font-size:11px;color:#ff2200;border:1px solid #550000;padding:6px 10px;max-width:190px;}
+.fw-box .fw-t{color:#ff5500;font-size:13px;font-weight:bold;margin-bottom:4px;}
+@keyframes glitch{0%,88%,100%{text-shadow:0 0 12px #ff0000,0 0 35px #ff0000;transform:none;}89%{text-shadow:-4px 0 #0ff,4px 0 #f0f;transform:translateX(2px);}91%{text-shadow:4px 0 #0ff,-4px 0 #f0f;transform:translateX(-2px);}93%{text-shadow:0 0 12px #ff0000,0 0 35px #ff0000;transform:none;}}
+@keyframes flicker{0%,100%{opacity:1;}50%{opacity:.65;}84%{opacity:.3;}86%{opacity:1;}}
+.v-mid{display:flex;gap:8px;padding:6px 12px;flex:1;overflow:hidden;min-height:0;}
+.v-left,.v-right{width:175px;flex-shrink:0;display:flex;flex-direction:column;gap:7px;}
+.v-center{flex:1;border:2px solid #bb0000;background:#0c0000;padding:12px;box-shadow:0 0 25px #ff000033,inset 0 0 25px #ff000018;display:flex;flex-direction:column;}
+.popup{border:1px solid #aa0000;background:#0c0000;}
+.pop-head{background:#440000;padding:3px 7px;display:flex;justify-content:space-between;font-size:11px;color:#ffaaaa;}
+.pop-body{padding:7px 8px;display:flex;gap:7px;align-items:flex-start;font-size:10px;color:#aa0000;line-height:1.5;}
+.pop-body .ico{font-size:20px;color:#ff2200;flex-shrink:0;}
+.pop-btn{display:block;margin:4px auto 7px;border:1px solid #aa0000;background:#080000;color:#cc0000;padding:3px 20px;font-family:'Share Tech Mono',monospace;font-size:10px;cursor:pointer;}
+.dl-panel{border:1px solid #440000;padding:6px 8px;background:#080000;font-size:10px;}
+.dl-skull{font-size:32px;filter:drop-shadow(0 0 6px #cc0000);}
+.err-stack{display:flex;flex-direction:column;gap:3px;}
+.err-mini{border:1px solid #880000;background:#0a0000;font-size:10px;}
+.err-mini .eh{background:#440000;padding:2px 6px;display:flex;justify-content:space-between;color:#ffaaaa;}
+.term-box{border:1px solid #990000;background:#060000;}
+.term-h{background:#440000;padding:2px 7px;font-size:10px;color:#ffaaaa;display:flex;justify-content:space-between;}
+.term-body{padding:5px 8px;font-size:10px;color:#cc0000;line-height:1.8;overflow:hidden;max-height:90px;}
+.access-box{border:1px solid #990000;padding:6px 8px;background:#060000;}
+.acc-title{font-family:'VT323',monospace;font-size:18px;color:#ff2200;letter-spacing:2px;}
+.acc-bar{height:4px;background:#220000;margin:3px 0;overflow:hidden;position:relative;}
+.acc-fill{position:absolute;left:0;top:0;height:100%;background:#cc0000;animation:afill 2.5s linear infinite;}
+@keyframes afill{0%{width:0%;}100%{width:100%;}}
+.prog-wrap{background:#160000;border:1px solid #440000;height:22px;position:relative;overflow:hidden;}
+.prog-fill{height:100%;background:repeating-linear-gradient(90deg,#cc0000 0,#cc0000 10px,#770000 10px,#770000 14px);width:0%;}
+.prog-pct{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:11px;color:#ff8888;}
+.warn-hdr{text-align:center;font-size:12px;color:#ff6600;border-bottom:1px solid #440000;padding-bottom:6px;margin-bottom:8px;letter-spacing:1px;}
+.vd-title{font-family:'VT323',monospace;font-size:clamp(32px,5vw,52px);color:#ff1100;text-align:center;text-shadow:0 0 10px #ff0000;animation:glitch 3s infinite;line-height:1;}
+.bio-svg{text-align:center;margin:6px 0;filter:drop-shadow(0 0 18px #ff0000);}
+.inf-msg{font-size:11px;text-align:center;color:#cc0000;letter-spacing:2px;margin:6px 0 5px;}
+.wait-msg{font-size:10px;text-align:center;color:#774444;margin-top:5px;}
+.noise-band{padding:2px 12px;height:26px;overflow:hidden;opacity:.35;font-size:11px;color:#440000;}
+.v-taskbar{display:flex;justify-content:space-between;align-items:center;background:#0a0000;border-top:1px solid #440000;padding:4px 12px;font-size:11px;flex-shrink:0;}
+.tb-start{border:1px solid #440000;padding:2px 10px;color:#aa0000;}
+.tb-alert{background:#120000;border:1px solid #cc0000;padding:2px 12px;color:#ff4400;animation:blink 1s infinite;}
+.tb-clock{color:#663333;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
+
+/* ===== PAGE 3 - BSOD ===== */
+#page3{display:none;width:100%;height:100vh;overflow:hidden;position:relative;}
+#page3.active{display:block;}
+#page3 img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:center top;}
+
+/* ===== PAGE 4 - STRADI FINAL ===== */
+#page4{display:none;width:100%;height:100vh;background:#1a0e00;overflow:hidden;position:relative;}
+#page4.active{display:block;}
+.stradi-img-wrap{position:absolute;inset:0;}
+.stradi-img-wrap img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;}
+
+/* Barra inferior — oculta, elementos van sobre la imagen */
+.bottom-bar{display:none;}
+
+/* REDES SOCIALES — columna vertical centrada a la derecha */
+.social-links{
+  position:absolute;right:20px;top:50%;transform:translateY(-50%);
+  display:flex;flex-direction:column;gap:16px;align-items:center;
+  z-index:10;
+}
+.social-links a{display:flex;align-items:center;justify-content:center;width:84px;height:84px;border-radius:18px;transition:transform .2s,box-shadow .2s;text-decoration:none;}
+.social-links a:hover{transform:scale(1.12);}
+.social-links a svg{width:50px;height:50px;}
+.yt{background:#FF0000;box-shadow:0 0 14px #FF000088;}
+.yt:hover{box-shadow:0 0 26px #FF0000;}
+.ig{background:radial-gradient(circle at 30% 110%,#fdf497 0%,#fd5949 45%,#d6249f 60%,#285AEB 90%);box-shadow:0 0 14px #d6249f88;}
+.ig:hover{box-shadow:0 0 26px #d6249f;}
+.tw{background:#000;border:2px solid #555;box-shadow:0 0 14px #ffffff44;}
+.tw:hover{box-shadow:0 0 26px #fff8;}
+.tt{background:#010101;border:2px solid #333;box-shadow:0 0 14px #69C9D088;}
+.tt:hover{box-shadow:0 0 26px #69C9D0;}
+
+/* CONTADOR — esquina inferior derecha */
+.visit-counter{
+  position:absolute;bottom:16px;right:20px;
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  background:rgba(0,0,0,0.7);border:1px solid #ff6600;border-radius:10px;
+  padding:6px 16px;z-index:10;
+}
+.visit-label{font-family:'Share Tech Mono',monospace;font-size:10px;color:#ff9944;letter-spacing:1px;text-transform:uppercase;}
+.visit-count{font-family:'VT323',monospace;font-size:28px;color:#ffdd00;text-shadow:0 0 8px #ffaa00;letter-spacing:3px;}
+
+/* BOTÓN NO TOCAR — centro-izquierda sobre la imagen */
+.danger-zone{
+  position:absolute;left:80px;top:50%;transform:translateY(-50%);
+  display:flex;align-items:center;justify-content:center;
+  width:320px;height:320px;z-index:10;
+}
+/* Anillos orbitales animados alrededor del botón */
+.danger-zone::before{
+  content:'';position:absolute;width:240px;height:240px;border-radius:50%;
+  border:2px dashed #ff2200;animation:orbit1 4s linear infinite;
+  box-shadow:0 0 10px #ff000066;
+}
+.danger-zone::after{
+  content:'';position:absolute;width:290px;height:290px;border-radius:50%;
+  border:1px solid #ff440044;animation:orbit2 6s linear infinite reverse;
+  box-shadow:0 0 15px #ff000033;
+}
+@keyframes orbit1{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
+@keyframes orbit2{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
+
+.danger-labels{position:absolute;inset:0;pointer-events:none;}
+.danger-labels span{position:absolute;font-family:'Share Tech Mono',monospace;font-size:9px;color:#ff2200;font-weight:bold;white-space:nowrap;animation:labelFlicker 1.5s infinite;text-shadow:0 0 6px #ff0000;}
+.danger-labels span:nth-child(1){top:4px;left:50%;transform:translateX(-50%);animation-delay:0s;}
+.danger-labels span:nth-child(2){bottom:4px;left:50%;transform:translateX(-50%);animation-delay:.3s;}
+.danger-labels span:nth-child(3){top:50%;left:4px;transform:translateY(-50%);animation-delay:.6s;}
+.danger-labels span:nth-child(4){top:50%;right:4px;transform:translateY(-50%);animation-delay:.9s;}
+.danger-labels span:nth-child(5){top:18%;left:8%;animation-delay:.15s;}
+.danger-labels span:nth-child(6){bottom:18%;right:8%;animation-delay:.45s;}
+@keyframes labelFlicker{0%,100%{opacity:1;}50%{opacity:.2;}75%{opacity:.9;}}
+
+/* Partículas de peligro */
+.spark{position:absolute;width:6px;height:6px;border-radius:50%;background:#ff2200;animation:spark-fly 2s ease-in-out infinite;box-shadow:0 0 6px #ff0000;}
+.spark:nth-child(1){animation-delay:0s;top:10%;left:50%;}
+.spark:nth-child(2){animation-delay:.4s;top:50%;left:5%;}
+.spark:nth-child(3){animation-delay:.8s;top:85%;left:40%;}
+.spark:nth-child(4){animation-delay:1.2s;top:30%;left:90%;}
+.spark:nth-child(5){animation-delay:1.6s;top:70%;left:80%;}
+@keyframes spark-fly{0%,100%{opacity:0;transform:scale(0.5);}50%{opacity:1;transform:scale(1.5);}}
+
+.no-touch-btn{
+  position:relative;z-index:2;
+  width:180px;height:180px;border-radius:50%;
+  background:radial-gradient(circle at 38% 32%,#ff7777 0%,#ff2200 35%,#990000 70%,#550000 100%);
+  border:5px solid #ff4444;
+  cursor:pointer;
+  box-shadow:
+    0 0 20px #ff0000,
+    0 0 50px #ff000088,
+    0 0 90px #ff000033,
+    inset 0 4px 12px rgba(255,200,200,0.4),
+    inset 0 -4px 12px rgba(0,0,0,0.5);
+  animation:btn-pulse 1s ease-in-out infinite;
+  font-family:'Share Tech Mono',monospace;font-size:14px;font-weight:bold;
+  color:#fff;text-shadow:0 0 10px #ff0000,0 0 20px #ff000088;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  user-select:none;
+  transition:transform .1s;
+}
+.no-touch-btn:active{transform:scale(0.95);}
+/* Brillo superior del botón */
+.no-touch-btn::before{
+  content:'';position:absolute;top:12px;left:30px;
+  width:60px;height:25px;border-radius:50%;
+  background:rgba(255,255,255,0.18);filter:blur(4px);pointer-events:none;
+}
+.no-touch-btn .skull-icon{font-size:38px;filter:drop-shadow(0 0 8px #ff0000);}
+@keyframes btn-pulse{
+  0%,100%{box-shadow:0 0 20px #ff0000,0 0 50px #ff000088,0 0 90px #ff000033,inset 0 4px 12px rgba(255,200,200,0.4),inset 0 -4px 12px rgba(0,0,0,0.5);}
+  50%{box-shadow:0 0 35px #ff4444,0 0 80px #ff0000bb,0 0 130px #ff000066,inset 0 4px 12px rgba(255,200,200,0.4),inset 0 -4px 12px rgba(0,0,0,0.5);}
+}
+
+/* OVERLAY fotos secretas */
+#secret-overlay{display:none;position:fixed;inset:0;z-index:9999;background:#000;align-items:center;justify-content:center;}
+#secret-overlay.active{display:flex;}
+#secret-overlay img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;background:#000;}
+</style>
+</head>
+<body>
+
+<audio id="sndError" src="error.mp3"></audio>
+<audio id="snd1" src="cancion1.mp3"></audio>
+<audio id="snd2" src="cancion2.mp3"></audio>
+<audio id="sndPedo" src="pedo.mp3" loop></audio>
+
+<!-- PAGE 1: NEON -->
+<div id="page1">
+  <canvas id="starCanvas"></canvas>
+  <div class="neon-btn" id="mainBtn">
+    <div class="neon-text">PULSA UN BOTÓN SI TE<br>QUIERES SORPRENDER</div>
+  </div>
+  <div class="corner-gem"></div>
+</div>
+
+<!-- PAGE 2: VIRUS -->
+<div id="page2">
+  <div class="v-topbar">
+    <div>
+      <div class="sys-hacked">SYSTEM HACKED<br><span class="sub">&gt;&gt;&gt; ACCESO NO AUTORIZADO</span></div>
+      <div class="tleft-lines" id="topLines"></div>
+    </div>
+    <div><div class="skull-top">☠</div><div class="infectado">INFECTADO</div></div>
+    <div class="fw-box"><div class="fw-t">FIREWALL DESACTIVADO</div><div>Tu sistema está en riesgo.</div><div style="font-size:18px;color:#ff0000;margin-top:6px;">▓▓▓ ✕</div></div>
+  </div>
+  <div class="v-mid">
+    <div class="v-left">
+      <div class="popup">
+        <div class="pop-head">Error de sistema <span>✕</span></div>
+        <div class="pop-body"><span class="ico">✕</span><div>No se puede acceder.<br>Se han detectado actividades maliciosas.</div></div>
+        <button class="pop-btn">Aceptar</button>
+      </div>
+      <div class="dl-panel">
+        <div>Descargando: virus.exe</div>
+        <div class="dl-skull">☠</div>
+        <div style="margin:4px 0 3px;">Descargando...</div>
+        <div class="prog-wrap"><div class="prog-fill" id="dl-fill"></div><div class="prog-pct" id="dl-pct">0%</div></div>
+      </div>
+      <div style="border:1px solid #1a0000;padding:5px;font-size:10px;color:#330000;min-height:30px;" id="noise-left"></div>
+    </div>
+    <div class="v-center">
+      <div class="warn-hdr">⚠&nbsp;&nbsp;¡ADVERTENCIA!&nbsp;&nbsp;⚠&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;✕</div>
+      <div class="vd-title">VIRUS DETECTADO</div>
+      <div class="bio-svg">
+        <svg width="110" height="110" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <defs><radialGradient id="rg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ff5500"/><stop offset="100%" stop-color="#880000"/></radialGradient></defs>
+          <circle cx="50" cy="50" r="12" fill="url(#rg)" stroke="#ff2200" stroke-width="2"/>
+          <circle cx="50" cy="50" r="5" fill="#080000"/>
+          <path d="M50 38 Q35 22 26 33 Q18 44 30 50 Q18 56 26 67 Q35 78 50 62" fill="none" stroke="url(#rg)" stroke-width="7" stroke-linecap="round"/>
+          <path d="M50 38 Q65 22 74 33 Q82 44 70 50 Q82 56 74 67 Q65 78 50 62" fill="none" stroke="url(#rg)" stroke-width="7" stroke-linecap="round"/>
+          <path d="M38 50 Q38 70 50 74 Q62 70 62 50" fill="none" stroke="url(#rg)" stroke-width="7" stroke-linecap="round"/>
+          <circle cx="20" cy="33" r="5" fill="#ff2200"/><circle cx="20" cy="67" r="5" fill="#ff2200"/>
+          <circle cx="80" cy="33" r="5" fill="#ff2200"/><circle cx="80" cy="67" r="5" fill="#ff2200"/>
+          <circle cx="50" cy="80" r="5" fill="#ff2200"/>
+        </svg>
+      </div>
+      <div class="inf-msg">TU SISTEMA ESTÁ SIENDO INFECTADO...</div>
+      <div class="prog-wrap"><div class="prog-fill" id="main-fill"></div><div class="prog-pct" id="main-pct">0%</div></div>
+      <div class="wait-msg">Por favor, espera...</div>
+    </div>
+    <div class="v-right">
+      <div class="err-stack">
+        <div class="err-mini"><div class="eh">Error <span>✕</span></div></div>
+        <div class="err-mini"><div class="eh">Error <span>✕</span></div></div>
+        <div class="err-mini">
+          <div class="eh">Error <span>✕</span></div>
+          <div style="padding:6px 8px;display:flex;gap:6px;font-size:10px;color:#cc0000;"><span style="font-size:18px;">✕</span><div>Archivo corrupto<br><span style="color:#774444;">El archivo está dañado o ha sido modificado.</span></div></div>
+          <button class="pop-btn">Aceptar</button>
+        </div>
+      </div>
+      <div class="term-box">
+        <div class="term-h">Terminal — root@infected <span style="color:#ff4400;">▣ ✕</span></div>
+        <div class="term-body" id="termRight"><div>&gt; conectando...</div></div>
+      </div>
+      <div class="access-box">
+        <div class="acc-title">ACCESO OBTENIDO</div>
+        <div class="acc-bar"><div class="acc-fill"></div></div>
+        <div class="acc-bar"><div class="acc-fill" style="animation-delay:.4s"></div></div>
+        <div class="acc-bar"><div class="acc-fill" style="animation-delay:.8s"></div></div>
+        <div class="acc-bar"><div class="acc-fill" style="animation-delay:1.2s"></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="noise-band" id="noiseBand"></div>
+  <div class="v-taskbar">
+    <span class="tb-start">🪟 Start</span>
+    <span class="tb-alert">⚠ ¡VIRUS DETECTADO!</span>
+    <span class="tb-clock" id="virusClock"></span>
+  </div>
+</div>
+
+<!-- PAGE 3: BSOD -->
+<div id="page3">
+  <img src="bsod.png" alt="BSOD">
+</div>
+
+<!-- PAGE 4: STRADI + elementos flotantes -->
+<div id="page4">
+  <div class="stradi-img-wrap">
+    <img src="stradi.png" alt="Stradi">
+
+    <!-- REDES SOCIALES: columna derecha, media altura -->
+    <div class="social-links">
+      <a href="https://www.youtube.com/stradi" target="_blank" class="yt" title="YouTube">
+        <svg viewBox="0 0 24 24" fill="white"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
+      </a>
+      <a href="https://www.instagram.com/stradi_81/" target="_blank" class="ig" title="Instagram">
+        <svg viewBox="0 0 24 24" fill="white"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 3.3.1 4.8 1.7 4.9 4.9.1 1.3.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 3.2-1.6 4.8-4.9 4.9-1.3.1-1.6.1-4.9.1s-3.6 0-4.8-.1c-3.3-.1-4.8-1.7-4.9-4.9-.1-1.3-.1-1.6-.1-4.8s0-3.6.1-4.8c.1-3.2 1.6-4.8 4.9-4.9 1.2-.1 1.5-.1 4.8-.1zm0-2.2C8.7 0 8.3 0 7.1.1 2.7.3.3 2.7.1 7.1 0 8.3 0 8.7 0 12s0 3.7.1 4.9c.2 4.4 2.6 6.8 7 7C8.3 24 8.7 24 12 24s3.7 0 4.9-.1c4.4-.2 6.8-2.6 7-7 .1-1.2.1-1.6.1-4.9s0-3.7-.1-4.9c-.2-4.4-2.6-6.8-7-7C15.7 0 15.3 0 12 0zm0 5.8a6.2 6.2 0 1 0 0 12.4A6.2 6.2 0 0 0 12 5.8zm0 10.2a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.4-11.8a1.4 1.4 0 1 0 0 2.8 1.4 1.4 0 0 0 0-2.8z"/></svg>
+      </a>
+      <a href="https://x.com/Stradi81" target="_blank" class="tw" title="X / Twitter">
+        <svg viewBox="0 0 24 24" fill="white"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </a>
+      <a href="https://www.tiktok.com/@stradi81" target="_blank" class="tt" title="TikTok">
+        <svg viewBox="0 0 24 24" fill="white"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg>
+      </a>
+    </div>
+
+    <!-- CONTADOR: esquina inferior derecha -->
+    <div class="visit-counter">
+      <div class="visit-label">👁 Visitas</div>
+      <div class="visit-count" id="visitCount">000000</div>
+    </div>
+
+    <!-- BOTÓN NO TOCAR: izquierda, media altura -->
+    <div class="danger-zone">
+      <div class="spark"></div>
+      <div class="spark"></div>
+      <div class="spark"></div>
+      <div class="spark"></div>
+      <div class="spark"></div>
+      <div class="danger-labels">
+        <span>☠ PELIGRO MUERTE ☠</span>
+        <span>⚠ NO APRETAR ⚠</span>
+        <span>💀 NO APRETAR 💀</span>
+        <span>⛔ PELIGRO ⛔</span>
+        <span>☠ MUERTE</span>
+        <span>NO TOCAR ☠</span>
+      </div>
+      <button class="no-touch-btn" id="noTouchBtn">
+        <span class="skull-icon">☠</span>
+        <span>NO TOCAR</span>
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- OVERLAY fotos secretas -->
+<div id="secret-overlay">
+  <img id="secret-img" src="" alt="">
+</div>
+
+<script>
+/* STARS */
+const canvas=document.getElementById('starCanvas');
+const ctx=canvas.getContext('2d');
+let stars=[];
+function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;stars=Array.from({length:80},()=>({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*1.2+0.3,a:Math.random(),da:(Math.random()*.02+.005)*(Math.random()<.5?1:-1)}));}
+resizeCanvas();window.addEventListener('resize',resizeCanvas);
+function drawStars(){ctx.clearRect(0,0,canvas.width,canvas.height);stars.forEach(s=>{s.a+=s.da;if(s.a>1||s.a<0)s.da*=-1;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle='rgba(200,230,255,'+s.a+')';ctx.fill();});requestAnimationFrame(drawStars);}
+drawStars();
+
+/* SHOW PAGE */
+function showPage(id){
+  document.querySelectorAll('#page1,#page2,#page3,#page4').forEach(el=>{el.style.display='none';el.classList.remove('active');});
+  const el=document.getElementById(id);
+  el.style.display=(id==='page2'||id==='page4')?'flex':'block';
+  el.classList.add('active');
+}
+document.getElementById('page1').style.display='flex';
+
+/* MAIN FLOW */
+document.getElementById('mainBtn').addEventListener('click',()=>{
+  showPage('page2');
+  startVirusAnimations();
+  setTimeout(()=>{
+    showPage('page3');
+    const sndErr=document.getElementById('sndError');
+    sndErr.currentTime=0; sndErr.play().catch(()=>{});
+    setTimeout(()=>{
+      showPage('page4');
+      initVisitCounter();
+      const s1=document.getElementById('snd1');
+      const s2=document.getElementById('snd2');
+      s1.currentTime=0; s1.play().catch(()=>{});
+      s1.addEventListener('ended',()=>{s2.currentTime=0;s2.play().catch(()=>{});},{once:true});
+    },3000);
+  },3000);
+});
+
+/* VIRUS ANIMATIONS */
+let virusIntervals=[];
+function startVirusAnimations(){
+  virusIntervals.forEach(clearInterval); virusIntervals=[];
+  updateClock();
+  virusIntervals.push(setInterval(updateClock,1000));
+  let mp=0,dp=0;
+  const mf=document.getElementById('main-fill'),mpEl=document.getElementById('main-pct');
+  const df=document.getElementById('dl-fill'),dpEl=document.getElementById('dl-pct');
+  virusIntervals.push(setInterval(()=>{
+    if(mp<100){mp=Math.min(100,mp+Math.random()*6+2);mf.style.width=mp+'%';mpEl.textContent=Math.floor(mp)+'%';}
+    if(dp<100){dp=Math.min(100,dp+Math.random()*5+1.5);df.style.width=dp+'%';dpEl.textContent=Math.floor(dp)+'%';}
+  },60));
+  const termLines=['>conectando a servidor...','> transferencia de datos...','<span style="color:#00cc00">&gt; infección completada.</span>','> tomando control...','> eliminando antivirus...','> acceso root obtenido.'];
+  const topLines=['>_inicializando secuencia...','> eliminando archivos...','> cifrando datos...','> instalando virus...'];
+  const tEl=document.getElementById('termRight'),tlEl=document.getElementById('topLines');
+  tlEl.innerHTML=''; tEl.innerHTML='<div>&gt; conectando...</div>';
+  let ti=0,topi=0;
+  virusIntervals.push(setInterval(()=>{if(ti<termLines.length){const d=document.createElement('div');d.innerHTML=termLines[ti++];tEl.appendChild(d);if(tEl.children.length>5)tEl.removeChild(tEl.children[0]);}},500));
+  virusIntervals.push(setInterval(()=>{if(topi<topLines.length){const d=document.createElement('div');d.textContent=topLines[topi++];tlEl.appendChild(d);}},600));
+  const chars='▓▒░█▄▀■□';
+  function rnd(l){let s='';for(let i=0;i<l;i++)s+=chars[Math.floor(Math.random()*chars.length)];return s;}
+  const nb=document.getElementById('noiseBand'),nl=document.getElementById('noise-left');
+  virusIntervals.push(setInterval(()=>{nb.textContent=rnd(100);nl.textContent=rnd(35);},120));
+  virusIntervals.push(setInterval(()=>{const p=document.getElementById('page2');p.style.transform='translateX('+(Math.random()-.5)*4+'px)';setTimeout(()=>p.style.transform='',90);},700));
+}
+function updateClock(){const n=new Date();let h=n.getHours(),m=n.getMinutes();const ap=h>=12?'PM':'AM';h=h%12||12;const el=document.getElementById('virusClock');if(el)el.textContent=h+':'+String(m).padStart(2,'0')+' '+ap;}
+
+/* VISIT COUNTER */
+function initVisitCounter(){
+  const key='stradi_visits';
+  let count=parseInt(localStorage.getItem(key)||'0')+1;
+  localStorage.setItem(key,count);
+  const el=document.getElementById('visitCount');
+  let cur=0;
+  const step=Math.ceil(count/60);
+  const intv=setInterval(()=>{cur=Math.min(cur+step,count);el.textContent=String(cur).padStart(6,'0');if(cur>=count)clearInterval(intv);},30);
+}
+
+/* BOTÓN NO TOCAR */
+const overlay=document.getElementById('secret-overlay');
+const secretImg=document.getElementById('secret-img');
+const sndPedo=document.getElementById('sndPedo');
+let showing=false, onImg2=false;
+
+function startHold(){
+  if(showing) return;
+  showing=true;
+  onImg2=!onImg2;
+  secretImg.src=onImg2?'foto2.png':'foto1.png';
+  sndPedo.currentTime=0; sndPedo.play().catch(()=>{});
+  overlay.classList.add('active');
+}
+function stopHold(){
+  if(!showing) return;
+  showing=false;
+  overlay.classList.remove('active');
+  sndPedo.pause(); sndPedo.currentTime=0;
+}
+
+const btn=document.getElementById('noTouchBtn');
+btn.addEventListener('mousedown',startHold);
+btn.addEventListener('touchstart',e=>{e.preventDefault();startHold();});
+document.addEventListener('mouseup',stopHold);
+document.addEventListener('touchend',stopHold);
+</script>
+</body>
+</html>
