@@ -83,6 +83,25 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;}
 /* Barra inferior — oculta, elementos van sobre la imagen */
 .bottom-bar{display:none;}
 
+/* CONTROL DE VOLUMEN */
+.vol-control{
+  position:absolute;bottom:20px;left:50%;transform:translateX(-50%);
+  z-index:10;display:none;align-items:center;gap:10px;
+  background:rgba(0,0,0,0.65);border:1px solid #ff6600;border-radius:30px;
+  padding:8px 18px;backdrop-filter:blur(4px);
+}
+.vol-control.active{display:flex;}
+.vol-icon{font-size:20px;cursor:pointer;user-select:none;transition:transform .15s;}
+.vol-icon:hover{transform:scale(1.2);}
+.vol-slider{
+  -webkit-appearance:none;appearance:none;
+  width:130px;height:6px;border-radius:3px;outline:none;cursor:pointer;
+  background:linear-gradient(to right,#ff6600 70%,#444 70%);
+}
+.vol-slider::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:#ff6600;box-shadow:0 0 6px #ff6600;cursor:pointer;}
+.vol-slider::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:#ff6600;box-shadow:0 0 6px #ff6600;cursor:pointer;border:none;}
+.vol-label{font-family:'Share Tech Mono',monospace;font-size:11px;color:#ff9944;min-width:34px;text-align:right;}
+
 /* REDES SOCIALES — columna vertical centrada a la derecha */
 .social-links{
   position:absolute;right:20px;top:50%;transform:translateY(-50%);
@@ -311,6 +330,13 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;}
       </a>
     </div>
 
+    <!-- CONTROL VOLUMEN: centro inferior -->
+    <div class="vol-control" id="volControl">
+      <span class="vol-icon" id="volIcon">🔊</span>
+      <input type="range" class="vol-slider" id="volSlider" min="0" max="100" value="70">
+      <span class="vol-label" id="volPct">70%</span>
+    </div>
+
     <!-- CONTADOR: esquina inferior derecha -->
     <div class="visit-counter">
       <div class="visit-label">👁 Visitas</div>
@@ -376,6 +402,7 @@ document.getElementById('mainBtn').addEventListener('click',()=>{
     setTimeout(()=>{
       showPage('page4');
       initVisitCounter();
+      initVolControl();
       const s1=document.getElementById('snd1');
       const s2=document.getElementById('snd2');
       s1.currentTime=0; s1.play().catch(()=>{});
@@ -449,6 +476,50 @@ btn.addEventListener('mousedown',startHold);
 btn.addEventListener('touchstart',e=>{e.preventDefault();startHold();});
 document.addEventListener('mouseup',stopHold);
 document.addEventListener('touchend',stopHold);
+
+/* VOLUME CONTROL */
+function initVolControl(){
+  const ctrl=document.getElementById('volControl');
+  const slider=document.getElementById('volSlider');
+  const icon=document.getElementById('volIcon');
+  const pct=document.getElementById('volPct');
+  const s1=document.getElementById('snd1');
+  const s2=document.getElementById('snd2');
+  ctrl.classList.add('active');
+
+  let muted=false;
+  let lastVol=70;
+
+  function setVol(v){
+    const vol=v/100;
+    s1.volume=vol; s2.volume=vol;
+    pct.textContent=v+'%';
+    // update slider gradient
+    slider.style.background='linear-gradient(to right,#ff6600 '+v+'%,#444 '+v+'%)';
+    icon.textContent = v===0 ? '🔇' : v<40 ? '🔉' : '🔊';
+  }
+
+  slider.addEventListener('input',()=>{
+    lastVol=parseInt(slider.value);
+    muted=lastVol===0;
+    setVol(lastVol);
+  });
+
+  icon.addEventListener('click',()=>{
+    if(muted){
+      muted=false;
+      slider.value=lastVol||70;
+      setVol(parseInt(slider.value));
+    } else {
+      muted=true;
+      lastVol=parseInt(slider.value)||70;
+      slider.value=0;
+      setVol(0);
+    }
+  });
+
+  setVol(70);
+}
 </script>
 </body>
 </html>
