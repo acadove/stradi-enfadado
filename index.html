@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pulsa el botón</title>
+<title>Jodemos Tu Vuelta</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@800&family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
+<script data-goatcounter="https://stradi.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 html,body{width:100%;height:100%;overflow:hidden;background:#000;}
@@ -508,25 +509,18 @@ function initVisitCounter(){
     const step=Math.max(1,Math.ceil(count/60));
     const intv=setInterval(()=>{cur=Math.min(cur+step,count);el.textContent=String(cur).padStart(6,'0');if(cur>=count)clearInterval(intv);},30);
   }
-  fetch('https://visitor.6developer.com/visit',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({
-      domain:'jodemostuvuelta.com',
-      timezone:Intl.DateTimeFormat().resolvedOptions().timeZone,
-      page_path:window.location.pathname,
-      page_title:document.title,
-      referrer:document.referrer
+  fetch('https://stradi.goatcounter.com/counter//.json')
+    .then(r=>r.json())
+    .then(data=>{
+      const count=parseInt((data.count||'0').replace(/[^0-9]/g,''))||0;
+      animCount(count);
     })
-  })
-  .then(r=>r.json())
-  .then(data=>{ animCount(data.totalCount||0); })
-  .catch(()=>{
-    const key='stradi_visits';
-    let count=parseInt(localStorage.getItem(key)||'0')+1;
-    localStorage.setItem(key,count);
-    animCount(count);
-  });
+    .catch(()=>{
+      const key='stradi_visits';
+      let count=parseInt(localStorage.getItem(key)||'0')+1;
+      localStorage.setItem(key,count);
+      animCount(count);
+    });
 }
 
 /* BOTÓN NO TOCAR */
