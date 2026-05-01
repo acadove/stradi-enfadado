@@ -437,6 +437,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;}
 </div>
 
 <script>
+/* CANCION ALEATORIA - se calcula antes del click del usuario */
+const randomStartSong = Math.floor(Math.random() * 5);
+
 /* STARS */
 const canvas=document.getElementById('starCanvas');
 const ctx=canvas.getContext('2d');
@@ -582,7 +585,7 @@ function initMusicPlayer(){
   }
 
   document.getElementById('nextSongBtn').addEventListener('click',()=>playSong(currentSong+1));
-  playSong(0);
+  playSong(randomStartSong);
 }
 
 function initVolControl(){
