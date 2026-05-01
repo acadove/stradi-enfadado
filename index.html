@@ -498,13 +498,24 @@ function updateClock(){const n=new Date();let h=n.getHours(),m=n.getMinutes();co
 
 /* VISIT COUNTER */
 function initVisitCounter(){
-  const key='stradi_visits';
-  let count=parseInt(localStorage.getItem(key)||'0')+1;
-  localStorage.setItem(key,count);
   const el=document.getElementById('visitCount');
-  let cur=0;
-  const step=Math.ceil(count/60);
-  const intv=setInterval(()=>{cur=Math.min(cur+step,count);el.textContent=String(cur).padStart(6,'0');if(cur>=count)clearInterval(intv);},30);
+  fetch('https://visitor.6developer.com/visit?domain=jodemostuvuelta.com',{method:'POST'})
+    .then(r=>r.json())
+    .then(data=>{
+      const count=data.total||0;
+      let cur=0;
+      const step=Math.max(1,Math.ceil(count/60));
+      const intv=setInterval(()=>{cur=Math.min(cur+step,count);el.textContent=String(cur).padStart(6,'0');if(cur>=count)clearInterval(intv);},30);
+    })
+    .catch(()=>{
+      // Fallback a localStorage si la API falla
+      const key='stradi_visits';
+      let count=parseInt(localStorage.getItem(key)||'0')+1;
+      localStorage.setItem(key,count);
+      let cur=0;
+      const step=Math.ceil(count/60);
+      const intv=setInterval(()=>{cur=Math.min(cur+step,count);el.textContent=String(cur).padStart(6,'0');if(cur>=count)clearInterval(intv);},30);
+    });
 }
 
 /* BOTÓN NO TOCAR */
