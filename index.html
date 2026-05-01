@@ -227,6 +227,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;}
 <audio id="sndError" src="error.mp3"></audio>
 <audio id="snd1" src="cancion1.mp3"></audio>
 <audio id="snd2" src="cancion2.mp3"></audio>
+<audio id="snd3" src="3.mp3"></audio>
+<audio id="snd4" src="4.mp3"></audio>
+<audio id="snd5" src="5.mp3"></audio>
 <audio id="sndPedo" src="pedo.mp3" loop></audio>
 
 <!-- PAGE 1: NEON -->
@@ -570,7 +573,7 @@ function startBsodCounter(){
 
 /* MUSIC PLAYER + VOLUME CONTROL */
 function initMusicPlayer(){
-  const songList=[document.getElementById('snd1'),document.getElementById('snd2')];
+  const songList=[document.getElementById('snd1'),document.getElementById('snd2'),document.getElementById('snd3'),document.getElementById('snd4'),document.getElementById('snd5')];
   let currentSong=0;
 
   function playSong(idx){
@@ -590,7 +593,7 @@ function initVolControl(){
   const slider=document.getElementById('volSlider');
   const icon=document.getElementById('volIcon');
   const pct=document.getElementById('volPct');
-  const songs=document.querySelectorAll('#snd1,#snd2');
+  const songs=document.querySelectorAll('#snd1,#snd2,#snd3,#snd4,#snd5');
   ctrl.classList.add('active');
 
   let muted=false;
