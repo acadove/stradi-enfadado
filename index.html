@@ -509,8 +509,9 @@ function initVisitCounter(){
     const step=Math.max(1,Math.ceil(count/60));
     const intv=setInterval(()=>{cur=Math.min(cur+step,count);el.textContent=String(cur).padStart(6,'0');if(cur>=count)clearInterval(intv);},30);
   }
-  fetch('https://stradi.goatcounter.com/counter//.json')
-    .then(r=>r.json())
+  // GoatCounter visitor counter - ruta correcta
+  fetch('https://stradi.goatcounter.com/counter/%2F.json')
+    .then(r=>{ if(!r.ok) throw new Error('no data'); return r.json(); })
     .then(data=>{
       const count=parseInt((data.count||'0').replace(/[^0-9]/g,''))||0;
       animCount(count);
@@ -529,6 +530,8 @@ const secretImg=document.getElementById('secret-img');
 const sndPedo=document.getElementById('sndPedo');
 let showing=false, fotoIndex=-1;
 const fotos=['foto1.png','foto2.png','foto3.png','foto4.png'];
+// Precargar todas las fotos al inicio
+fotos.forEach(src=>{ const img=new Image(); img.src=src; });
 
 function startHold(){
   if(showing) return;
